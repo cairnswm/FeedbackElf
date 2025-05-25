@@ -27,7 +27,7 @@ $token = getToken();
 // $user = getUserFromToken($token);
 // $userid = $user->id;
 
-$user_id = 100;
+$userid = 100;
 
 include_once dirname(__FILE__) . "/functions/applications.php";
 include_once dirname(__FILE__) . "/functions/products.php";
@@ -123,7 +123,7 @@ $feedbackconfig = [
             ],
         ]
     ],
-    "bugs" => [
+    "bug" => [
         "tablename" => "bugs",
         "key" => "id",
         "select" => ["id", "product_id", "title", "description", "severity", "status", "user_name", "user_email", "created_at", "modified_at"],
@@ -137,7 +137,7 @@ $feedbackconfig = [
             ]
         ]
     ],
-    "reviews" => [
+    "review" => [
         "tablename" => "reviews",
         "key" => "id",
         "select" => ["id", "product_id", "rating", "content", "user_name", "user_email", "created_at", "modified_at"],
@@ -151,7 +151,7 @@ $feedbackconfig = [
             ]
         ]
     ],
-    "features" => [
+    "feature" => [
         "tablename" => "features",
         "key" => "id",
         "select" => ["id", "product_id", "title", "description", "status", "user_name", "user_email", "created_at", "modified_at"],
@@ -165,7 +165,12 @@ $feedbackconfig = [
             ]
         ]
     ],
-    "bug_notes" => [
+    "apikey" => [
+        "tablename" => "products",
+        "key" => "api_key",
+        "select" => ["id", "user_id", "name", "description", "image_url", "application_id", "folder_id", "api_key", "enable_bugs", "enable_reviews", "enable_features"]
+    ],
+    "bug_note" => [
         "tablename" => "bug_notes",
         "key" => "id",
         "select" => ["id", "bug_id", "user_id", "content"],
@@ -174,7 +179,7 @@ $feedbackconfig = [
         "delete" => true,
     ],
 
-    "review_notes" => [
+    "review_note" => [
         "tablename" => "review_notes",
         "key" => "id",
         "select" => ["id", "review_id", "user_id", "content"],
@@ -183,7 +188,7 @@ $feedbackconfig = [
         "delete" => true,
     ],
 
-    "feature_notes" => [
+    "feature_note" => [
         "tablename" => "feature_notes",
         "key" => "id",
         "select" => ["id", "feature_id", "user_id", "content"],
@@ -423,7 +428,7 @@ function updateProductReviews($config, $fields, $new_record)
 
 function beforeCreateItem($config, $fields)
 {
-    global $gapiconn, $userid;
+    global $userid;
 
     if (isset($fields['user_id'])) {
         $fields['user_id'] = $userid;
