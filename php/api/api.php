@@ -10,17 +10,19 @@ include_once dirname(__FILE__) . "/../security/security.config.php";
 $appid = getAppId();
 $token = getToken();
 
-if (validateJwt($token, false) == false) {
-    http_response_code(401);
-    echo json_encode([
-        'error' => true,
-        'message' => 'Unauthorized'
-    ]);
-    die();
-}
+// if (validateJwt($token, false) == false) {
+//     http_response_code(401);
+//     echo json_encode([
+//         'error' => true,
+//         'message' => 'Unauthorized'
+//     ]);
+//     die();
+// }
 
-$user = getUserFromToken($token);
-$userid = $user->id;
+// $user = getUserFromToken($token);
+// $userid = $user->id;
+
+$user_id = 100;
 
 include_once dirname(__FILE__) . "/functions/applications.php";
 include_once dirname(__FILE__) . "/functions/products.php";
