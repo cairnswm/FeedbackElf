@@ -85,7 +85,7 @@ $feedbackconfig = [
             "folders" => [
                 "tablename" => "folders",
                 "key" => "application_id",
-                "select" => ["id", "user_id", "name", "image_url", "application_id"],
+                "select" => ["id", "user_id", "name", "image_url", "parent_id", "application_id"],
             ],
         ]
     ],
@@ -195,9 +195,9 @@ $feedbackconfig = [
     "folders" => [
         "tablename" => "folders",
         "key" => "id",
-        "select" => ["id", "user_id", "name", "image_url", "application_id"],
-        "create" => ["user_id", "name", "image_url", "application_id"],
-        "update" => ["user_id", "name", "image_url", "application_id"],
+        "select" => ["id", "user_id", "name", "image_url", "parent_id", "application_id"],
+        "create" => ["user_id", "name", "image_url", "parent_id", "application_id"],
+        "update" => ["user_id", "name", "image_url", "parent_id", "application_id"],
         "delete" => true,
         "beforeselect" => "",
         "beforecreate" => "",
