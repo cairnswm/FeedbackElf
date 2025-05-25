@@ -64,11 +64,35 @@ function SelectData($config, $id = null)
                 $stmt->bind_param($types, ...$params);
             }
             $stmt->execute();
-            $result = $stmt->get_result();
             $rows = [];
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
+
+            // Check if get_result() is available
+            if (method_exists($stmt, 'get_result')) {
+                $result = $stmt->get_result();
+                while ($row = $result->fetch_assoc()) {
+                    $rows[] = $row;
+                }
+            } else {
+                // Fallback for environments without get_result()
+                $meta = $stmt->result_metadata();
+                $fields = [];
+                $row = [];
+
+                while ($field = $meta->fetch_field()) {
+                    $fields[] = &$row[$field->name];
+                }
+
+                call_user_func_array([$stmt, 'bind_result'], $fields);
+
+                while ($stmt->fetch()) {
+                    $tempRow = [];
+                    foreach ($row as $key => $val) {
+                        $tempRow[$key] = $val;
+                    }
+                    $rows[] = $tempRow;
+                }
             }
+
             $stmt->close();
         }
     } elseif (is_array($config['select'])) {
@@ -109,11 +133,35 @@ function SelectData($config, $id = null)
             $stmt->bind_param($types, ...$params);
         }
         $stmt->execute();
-        $result = $stmt->get_result();
         $rows = [];
-        while ($row = $result->fetch_assoc()) {
-            $rows[] = $row;
+
+        // Check if get_result() is available
+        if (method_exists($stmt, 'get_result')) {
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        } else {
+            // Fallback for environments without get_result()
+            $meta = $stmt->result_metadata();
+            $fields = [];
+            $row = [];
+
+            while ($field = $meta->fetch_field()) {
+                $fields[] = &$row[$field->name];
+            }
+
+            call_user_func_array([$stmt, 'bind_result'], $fields);
+
+            while ($stmt->fetch()) {
+                $tempRow = [];
+                foreach ($row as $key => $val) {
+                    $tempRow[$key] = $val;
+                }
+                $rows[] = $tempRow;
+            }
         }
+
         $stmt->close();
     }
 
