@@ -19,7 +19,7 @@ function getProductsforApplication($config, $id)
   
   -- Derived fields
   COALESCE(AVG(r.rating), 0) AS rating,
-  COUNT(DISTINCT r.id) AS review_count,
+  COUNT(DISTINCT r.id) AS rating_count,
   COUNT(DISTINCT f.id) AS feature_count,
   COUNT(DISTINCT b.id) AS bug_count
 
@@ -55,7 +55,7 @@ function getStandaloneProductsForUser($config, $id)
 
   -- Derived fields
   COALESCE(AVG(r.rating), 0) AS rating,
-  COUNT(DISTINCT r.id) AS review_count,
+  COUNT(DISTINCT r.id) AS rating_count,
   COUNT(DISTINCT f.id) AS feature_count,
   COUNT(DISTINCT b.id) AS bug_count
 

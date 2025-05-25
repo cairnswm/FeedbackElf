@@ -422,7 +422,7 @@ function updateProductReviews($config, $fields, $new_record)
     mysqli_stmt_close($stmt);
 
     // Update the product with the new average rating
-    $updateQuery = "UPDATE products SET review_count = ?, review_average = ?, features_count = ?, bugs_count = ? WHERE id = ?";
+    $updateQuery = "UPDATE products SET rating_count = ?, review_average = ?, features_count = ?, bugs_count = ? WHERE id = ?";
     $stmt = mysqli_prepare($gapiconn, $updateQuery);
     mysqli_stmt_bind_param($stmt, "ddiii", $countRating, $avgRating, $featureCount, $bugCount, $productId);
     mysqli_stmt_execute($stmt);
