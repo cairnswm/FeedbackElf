@@ -65,7 +65,7 @@ LEFT JOIN reviews r ON r.product_id = p.id
 LEFT JOIN features f ON f.product_id = p.id
 LEFT JOIN bugs b ON b.product_id = p.id
 
-WHERE p.user_id = ? and p.application_id IS NULL
+WHERE p.user_id = ? and p.application_id = 0
 GROUP BY p.id;
 ";
 
