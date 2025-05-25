@@ -123,7 +123,7 @@ $feedbackconfig = [
             "features" => [
                 "tablename" => "features",
                 "key" => "product_id",
-                "select" => ["id", "product_id", "title", "description", "status", "user_name", "user_email", "created_at", "modified_at"],
+                "select" => ["id", "product_id", "title", "description", "status", "priority", "user_name", "user_email", "created_at", "modified_at"],
                 "beforeselect" => ""
             ],
         ]
@@ -159,9 +159,9 @@ $feedbackconfig = [
     "feature" => [
         "tablename" => "features",
         "key" => "id",
-        "select" => ["id", "product_id", "title", "description", "status", "user_name", "user_email", "created_at", "modified_at"],
-        "create" => ["product_id", "title", "description", "status", "user_name", "user_email"],
-        "update" => ["product_id", "title", "description", "status", "user_name", "user_email"],
+        "select" => ["id", "product_id", "title", "description", "status", "priority", "user_name", "user_email", "created_at", "modified_at"],
+        "create" => ["product_id", "title", "description", "status", "priority", "user_name", "user_email"],
+        "update" => ["product_id", "title", "description", "status", "priority", "user_name", "user_email"],
         "subkeys" => [
             "notes" => [
                 "tablename" => "feature_notes",
