@@ -62,6 +62,11 @@ $feedbackconfig = [
                 "key" => "user_id",
                 "select" => "getUserItems",
             ],
+            "standalone" => [
+                "tablename" => "products",
+                "key" => "user_id",
+                "select" => "getStandaloneProductsForUser",
+            ],
         ]
     ],
     "application" => [
