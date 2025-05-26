@@ -32,7 +32,7 @@ if (!is_dir($uploadDir)) {
 }
 
 foreach ($images as $key => $base64data) {
-    if (!preg_match('/^image\/(\w+);base64,/', $base64data, $matches)) {
+    if (!preg_match('/^(?:data:)?image\/(\w+);base64,/', $base64data, $matches)) {
         $format = '';
         if (preg_match('/^([^;]+);base64,/', $base64data, $formatMatch)) {
             $format = $formatMatch[1];
