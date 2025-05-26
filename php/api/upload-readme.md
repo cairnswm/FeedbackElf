@@ -105,9 +105,3 @@ The `errors` array in the response contains messages for any issues encountered 
 ## Directory Structure
 
 Uploaded files are saved in the `uploads/<userId>/` directory relative to the project root. If the directory does not exist, it will be created automatically with `0755` permissions.
-
-## Notes
-
-- Ensure the `uploads` directory is writable by the web server.
-- Validate the Base64-encoded images before sending them to the API.
-- The script supports common image formats such as PNG and JPEG.
