@@ -10,7 +10,18 @@ if ($key === "") {
     die(json_encode(['error' => 'API key is missing.']));
 }
 
-$sql = "SELECT id, name, image_url, enable_reviews, enable_bugs, enable_reviews FROM products WHERE api_key = ? LIMIT 1";
+$sql = "SELECT p.id, p.name, p.image_url, p.enable_reviews, p.enable_bugs, 
+        COALESCE(AVG(r.rating), 0) AS rating,
+        COUNT(DISTINCT r.id) AS rating_count,
+        COUNT(DISTINCT f.id) AS feature_count,
+        COUNT(DISTINCT b.id) AS bug_count
+    FROM products p
+    LEFT JOIN reviews r ON r.product_id = p.id
+    LEFT JOIN features f ON f.product_id = p.id
+    LEFT JOIN bugs b ON b.product_id = p.id
+    WHERE p.api_key = ?
+    GROUP BY p.id, p.name, p.image_url, p.enable_reviews, p.enable_bugs
+    LIMIT 1";
 
 $row = executeSQL($sql, [$key]);
 if (!$row) {
