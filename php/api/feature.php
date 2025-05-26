@@ -1,5 +1,6 @@
 <?php
 
+include_once "../corsheaders.php";
 include_once("../gapiv2/dbconn.php");
 include_once("../utils.php");
 
