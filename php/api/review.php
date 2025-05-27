@@ -12,10 +12,6 @@ $title = getParam('title', null);
 $description = getParam('description', null);
 $rating = getParam('rating', null);
 
-if ($key === null) {
-    die(json_encode(['error' => 'API key is missing.']));
-}
-
 $sql = "insert into reviews (product_id, user_name, user_email, rating, title, content) 
         select id, ?, ?, ?, ?, ? from products where api_key = ? limit 1";
 

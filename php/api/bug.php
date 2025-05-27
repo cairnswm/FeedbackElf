@@ -12,10 +12,6 @@ $severity = getParam('severity', null);
 $title = getParam('title', null);
 $description = getParam('description', null);
 
-if ($key === null) {
-    die(json_encode(['error' => 'API key is missing.']));
-}
-
 $sql = "insert into bugs (product_id, user_name, user_email, status, severity, title, description) 
         select id, ?, ?, ?, ?, ? from products where api_key = ? limit 1";
 
