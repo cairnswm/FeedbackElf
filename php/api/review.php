@@ -5,20 +5,25 @@ include_once("../gapiv2/dbconn.php");
 include_once("../utils.php");
 
 $key = getParam('key', null);
-$id = getParam('id', null);
-$username = getParam('username', null);
-$useremail = getParam('useremail', null);
-$title = getParam('title', null);
-$description = getParam('description', null);
+$id = getParam('product_id', null);
+$username = getParam('user_name', null);
+$useremail = getParam('user_email', null);
+$title = getParam('title', default: null);
+$content = getParam('content', null);
 $rating = getParam('rating', null);
 
 $sql = "insert into reviews (product_id, user_name, user_email, rating, title, content) 
-        select id, ?, ?, ?, ?, ? from products where api_key = ? limit 1";
+        values (?, ?, ?, ?, ?, ?)";
 
-$row = executeSQL($sql, [$username, $useremail, $rating, $title, $description, $key]);
+echo $sql . "\n";
+var_dump([$id, $username, $useremail, $rating, $title, $content]);
+
+$row = executeSQL($sql, [$id, $username, $useremail, $rating, $title, $content]);
 if (!$row) {
     die(json_encode(['error' => 'Failed to create review.']));
 }
+
+
 
 $response = [
     'success' => true,

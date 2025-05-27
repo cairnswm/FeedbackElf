@@ -5,9 +5,9 @@ include_once("../gapiv2/dbconn.php");
 include_once("../utils.php");
 
 $key = getParam('key', null);
-$id = getParam('id', null);
-$username = getParam('username', null);
-$useremail = getParam('useremail', null);
+$id = getParam('product_id', null);
+$username = getParam('user_name', null);
+$useremail = getParam('user_email', null);
 $severity = getParam('severity', null);
 $title = getParam('title', null);
 $description = getParam('description', null);
