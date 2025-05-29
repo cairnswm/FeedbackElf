@@ -12,10 +12,10 @@ $severity = getParam('severity', null);
 $title = getParam('title', null);
 $description = getParam('description', null);
 
-$sql = "insert into bugs (product_id, user_name, user_email, status, severity, title, description) 
-        select id, ?, ?, ?, ?, ? from products where api_key = ? limit 1";
+$sql = "insert into bugs (product_id, user_name, user_email, status, severity, title, description)
+   values (?, ?, ?, ?, ?, ?, ?)";
 
-$row = executeSQL($sql, [$username, $useremail, "open", $severity, $title, $description, $key]);
+$row = executeSQL($sql, [$id, $username, $useremail, "open", $severity, $title, $description]);
 if (!$row) {
     die(json_encode(['error' => 'Failed to create bug report.']));
 }
