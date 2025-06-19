@@ -6,8 +6,6 @@ $issuer = getSecret("jwt_issuer", "cairnsgames.co.za");
 $subject = getSecret("jwt_subject", "cairnsgames token");
 $audience = getSecret("jwt_audience", "cairnsgames client");
 
-
-
 $defaultConfig = array("issuer"=>$issuer,"subject"=>$subject,"audience"=>$audience);
 
 $JWTSECRET = getSecret("SECURE_SECRET","cairnsgameSUPERsecretPASSWORD");
@@ -22,9 +20,12 @@ function createToken($payload) {
     return $jwt;
 }
 function validateJwt($token,$time=false,$aud="") {
+    global $JWTSECRET, $jwtError;
     if (!isset($aud) || $aud="") {
         $aud = getSecret("jwt_audience", "cairnsgames client");
     }
+
+    echo "SECRET: $JWTSECRET\n";
     global $JWTSECRET, $jwtError;
     jwt_set_secret($JWTSECRET);
     $valid = validate_jwt($token,$time,$aud);

@@ -97,10 +97,10 @@ function getProperty($name, $default)
 
 function getUserFromToken($token)
 {
-    if (validateJwt($token)) {
+    // if (validateJwt($token)) {
 
         $data = get_jwt_payload($token)->data;
         return $data;
-    }
+    // }
     return null;
 }

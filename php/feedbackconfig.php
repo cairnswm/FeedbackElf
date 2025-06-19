@@ -3,7 +3,7 @@
 $feedbackconfig = array(
     "server" => 'cairnsgames.co.za',
     "username" => 'cairnsgamesco_feedbackelf',
-    "password" => 'cairnsco_feedback',
+    "password" => 'cairnsco_feedbackelf',
     "database" => 'cairnsgamesco_feedbackelf'
 );
 

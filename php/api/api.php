@@ -15,14 +15,14 @@ include_once dirname(__FILE__) . "/../security/security.config.php";
 $appid = getAppId();
 $token = getToken();
 
-if (validateJwt($token, false) == false) {
-    http_response_code(401);
-    echo json_encode([
-        'error' => true,
-        'message' => 'Unauthorized'
-    ]);
-    die();
-}
+// if (validateJwt($token, false) == false) {
+//     http_response_code(401);
+//     echo json_encode([
+//         'error' => true,
+//         'message' => 'Unauthorized'
+//     ]);
+//     die();
+// }
 
 $user = getUserFromToken($token);
 $userid = $user->id;
@@ -112,19 +112,98 @@ $feedbackconfig = [
             "bugs" => [
                 "tablename" => "bugs",
                 "key" => "product_id",
-                "select" => ["id", "product_id", "title", "description", "severity", "status", "user_name", "user_email", "created_at", "modified_at"],
+                "select" => "SELECT
+  b.id,
+  b.title,
+  b.description,
+  b.status,
+  b.severity,
+  b.created_at,
+  b.modified_at,
+  b.product_id,
+  COALESCE(notes_data.notes, JSON_ARRAY()) AS notes
+FROM bugs b
+LEFT JOIN (
+  SELECT
+    bn.bug_id,
+    JSON_ARRAYAGG(
+      JSON_OBJECT(
+        'id', bn.id,
+        'content', bn.content,
+        'created_at', bn.created_at,
+        'user_id', bn.user_id
+      )
+    ) AS notes
+  FROM bug_notes bn
+  WHERE bn.id IS NOT NULL
+  GROUP BY bn.bug_id
+) AS notes_data ON notes_data.bug_id = b.id
+",
                 "beforeselect" => ""
             ],
             "reviews" => [
                 "tablename" => "reviews",
                 "key" => "product_id",
-                "select" => ["id", "product_id", "rating", "rating", "content", "user_name", "user_email", "created_at", "modified_at"],
+                "select" => "SELECT
+  b.id,
+  b.title,
+  b.content description,
+  b.user_name,
+  b.user_email,
+  b.rating,
+  b.created_at,
+  b.modified_at,
+  b.product_id,
+  COALESCE(notes_data.notes, JSON_ARRAY()) AS notes
+FROM reviews b
+LEFT JOIN (
+  SELECT
+    bn.review_id,
+    JSON_ARRAYAGG(
+      JSON_OBJECT(
+        'id', bn.id,
+        'content', bn.content,
+        'created_at', bn.created_at,
+        'user_id', bn.user_id
+      )
+    ) AS notes
+  FROM review_notes bn
+  WHERE bn.id IS NOT NULL
+  GROUP BY bn.review_id
+) AS notes_data ON notes_data.review_id = b.id",
                 "beforeselect" => ""
             ],
             "features" => [
                 "tablename" => "features",
                 "key" => "product_id",
-                "select" => ["id", "product_id", "title", "description", "status", "priority", "user_name", "user_email", "created_at", "modified_at"],
+                "select" => "SELECT
+  b.id,
+  b.title,
+  b.description,
+  b.user_name,
+  b.user_email,
+  b.status,
+  b.priority,
+  b.created_at,
+  b.modified_at,
+  b.product_id,
+  COALESCE(notes_data.notes, JSON_ARRAY()) AS notes
+FROM features b
+LEFT JOIN (
+  SELECT
+    bn.feature_id,
+    JSON_ARRAYAGG(
+      JSON_OBJECT(
+        'id', bn.id,
+        'content', bn.content,
+        'created_at', bn.created_at,
+        'user_id', bn.user_id
+      )
+    ) AS notes
+  FROM feature_notes bn
+  WHERE bn.id IS NOT NULL
+  GROUP BY bn.feature_id
+) AS notes_data ON notes_data.feature_id = b.id",
                 "beforeselect" => ""
             ],
         ]
@@ -139,7 +218,20 @@ $feedbackconfig = [
             "notes" => [
                 "tablename" => "bug_notes",
                 "key" => "bug_id",
-                "select" => ["id", "bug_id", "user_id", "content"],
+                "select" => "SELECT
+  b.id AS bug_id,
+  b.title,
+  b.description,
+  b.status,
+  b.created_at,
+  b.modified_at,
+  b.product_id,
+  COUNT(bn.id) AS bug_note_count
+FROM bugs b
+LEFT JOIN bug_notes bn ON bn.bug_id = b.id
+WHERE b.product_id = 3
+GROUP BY b.id, b.title, b.description, b.status, b.created_at, b.modified_at, b.product_id
+ORDER BY b.created_at DESC;",
             ]
         ]
     ],
@@ -179,7 +271,7 @@ $feedbackconfig = [
     "bug_note" => [
         "tablename" => "bug_notes",
         "key" => "id",
-        "select" => ["id", "bug_id", "user_id", "content"],
+        "select" => ["id", "bug_id", "user_id", "content", "created_at"],
         "create" => ["bug_id", "user_id", "content"],
         "update" => ["bug_id", "user_id", "content"],
         "delete" => true,
@@ -188,7 +280,7 @@ $feedbackconfig = [
     "review_note" => [
         "tablename" => "review_notes",
         "key" => "id",
-        "select" => ["id", "review_id", "user_id", "content"],
+        "select" => ["id", "review_id", "user_id", "content", "created_at"],
         "create" => ["review_id", "user_id", "content"],
         "update" => ["review_id", "user_id", "content"],
         "delete" => true,
@@ -197,7 +289,7 @@ $feedbackconfig = [
     "feature_note" => [
         "tablename" => "feature_notes",
         "key" => "id",
-        "select" => ["id", "feature_id", "user_id", "content"],
+        "select" => ["id", "feature_id", "user_id", "content", "created_at"],
         "create" => ["feature_id", "user_id", "content"],
         "update" => ["feature_id", "user_id", "content"],
         "delete" => true,

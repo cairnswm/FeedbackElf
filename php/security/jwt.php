@@ -92,37 +92,42 @@ function validate_jwt($token, $time = false, $aud = null)
     $jwtError = array();
     $section = explode('.', $token);
     $secret = jwt_secret();
-    $header = "";
-    if (isset($section[0])) {
-        $header = $section[0];
+
+    if (count($section) < 3) {
+        $jwtError[] = "Invalid token format";
+        return false;
     }
-    $payload = "";
-    if (isset($section[1])) {
-        $payload = $section[1];
-    }
-    $tokensignature = "";
-    if (isset($section[2])) {
-        $tokensignature = $section[2];
-    }
+
+    $header = $section[0];
+    $payload = $section[1];
+    $tokensignature = $section[2];
 
     $raw = $header . "." . $payload;
     $signature = base64url_encode(hash_hmac("sha256", $raw, $secret));
 
-    if ($signature == $tokensignature) {
+    if ($signature === $tokensignature) {
         if ($time) {
-            $payload = json_decode(base64url_decode($section[1]));
-            $now = new DateTime();
-            if ($payload->exp < $now->getTimestamp()) {
-                echo "Token has expired";
-                $jwtError[] = "Token has expired";
+            $decodedPayload = json_decode(base64url_decode($payload));
+            if ($decodedPayload && isset($decodedPayload->exp)) {
+                $now = new DateTime();
+                if ($decodedPayload->exp < $now->getTimestamp()) {
+                    $jwtError[] = "Token has expired";
+                    return false;
+                }
+            } else {
+                $jwtError[] = "Invalid payload structure";
                 return false;
             }
         }
-        if ($aud != NULL) {
-            $payload = json_decode(base64url_decode($section[1]));
-            if ($payload->aud != $aud) {
-                echo "Invalid Audience, $payload->aud, not $aud expected";
-                $jwtError[] = "Invalid Audience, $payload->aud, not $aud expected";
+        if ($aud !== null) {
+            $decodedPayload = json_decode(base64url_decode($payload));
+            if ($decodedPayload && isset($decodedPayload->aud)) {
+                if ($decodedPayload->aud !== $aud) {
+                    $jwtError[] = "Invalid Audience, {$decodedPayload->aud}, not {$aud} expected";
+                    return false;
+                }
+            } else {
+                $jwtError[] = "Invalid payload structure";
                 return false;
             }
         }
